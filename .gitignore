@@ -1,0 +1,53 @@
+# --- Python ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Virtual envs ---------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+
+# --- IDE / editor ---------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# --- Datasets (downloaded at runtime by torchvision) ---------------------
+data/
+*.tar.gz
+
+# --- Run artefacts --------------------------------------------------------
+results/
+results.zip
+figs/
+
+# --- LaTeX build artefacts (only relevant if the paper is added later) ---
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.lof
+*.lot
+*.dvi

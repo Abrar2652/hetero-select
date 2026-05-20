@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "heteroselect"
+version = "1.0.0"
+description = "Informativeness-aware client selection and gradient compression for communication-efficient federated learning."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Md. Akmol Masud",  email = "masud.stu2018@juniv.edu" },
+    { name = "Md Abrar Jahin",   email = "jahin@usc.edu" },
+    { name = "Mahmud Hasan",     email = "hasanm10@vcu.edu" },
+]
+keywords = [
+    "federated-learning",
+    "client-selection",
+    "gradient-compression",
+    "non-iid",
+    "communication-efficiency",
+    "error-feedback",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "torch>=2.1",
+    "torchvision>=0.16",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.7"]
+yaml = ["pyyaml>=6.0"]
+dev  = ["pytest>=7.4", "matplotlib>=3.7", "pyyaml>=6.0"]
+
+[project.urls]
+Homepage = "https://github.com/masud1901/hetero-select"
+Issues   = "https://github.com/masud1901/hetero-select/issues"
+
+[tool.setuptools.packages.find]
+include = ["heteroselect*"]
+exclude = ["tests*", "scripts*", "configs*"]

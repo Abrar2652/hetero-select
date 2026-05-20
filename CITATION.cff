@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the accompanying paper."
+title: "HeteRo-Select: Informativeness-Aware Client Selection and Gradient Compression for Communication-Efficient Federated Learning"
+authors:
+  - family-names: Masud
+    given-names: Md. Akmol
+    affiliation: Jahangirnagar University
+    email: masud.stu2018@juniv.edu
+  - family-names: Jahin
+    given-names: Md Abrar
+    affiliation: University of Southern California
+    email: jahin@usc.edu
+  - family-names: Hasan
+    given-names: Mahmud
+    affiliation: Virginia Commonwealth University
+    email: hasanm10@vcu.edu
+year: 2026
+version: "1.0.0"
+license: MIT
+type: software
+repository-code: "https://github.com/<your-username>/hetero-select"
+keywords:
+  - federated-learning
+  - client-selection
+  - gradient-compression
+  - non-iid
+  - communication-efficiency
+  - error-feedback
+preferred-citation:
+  type: article
+  title: "HeteRo-Select: Informativeness-Aware Client Selection and Gradient Compression for Communication-Efficient Federated Learning"
+  authors:
+    - family-names: Masud
+      given-names: Md. Akmol
+    - family-names: Jahin
+      given-names: Md Abrar
+    - family-names: Hasan
+      given-names: Mahmud
+  year: 2026
+  journal: "Manuscript under review"
