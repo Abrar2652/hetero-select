@@ -10,9 +10,9 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
 authors = [
-    { name = "Md. Akmol Masud",  email = "masud.stu2018@juniv.edu" },
+    { name = "M. A. Masud",      email = "m.masud@queensu.ca" },
     { name = "Md Abrar Jahin",   email = "jahin@usc.edu" },
-    { name = "Mahmud Hasan",     email = "hasanm10@vcu.edu" },
+    { name = "M. Hasan",         email = "hasanm10@vcu.edu" },
 ]
 keywords = [
     "federated-learning",

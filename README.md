@@ -58,7 +58,7 @@ Key defaults live in `heteroselect.config.DEFAULT_FL_CONFIG` (or `configs/defaul
 @article{masud2026heteroselect,
   title   = {HeteRo-Select: Informativeness-Aware Client Selection and Gradient
              Compression for Communication-Efficient Federated Learning},
-  author  = {Masud, Md. Akmol and Jahin, Md Abrar and Hasan, Mahmud},
+  author  = {Masud, M. A. and Jahin, Md Abrar and Hasan, M.},
   journal = {Manuscript under review},
   year    = {2026}
 }

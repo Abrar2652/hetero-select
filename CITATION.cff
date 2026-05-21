@@ -3,22 +3,22 @@ message: "If you use this software, please cite the accompanying paper."
 title: "HeteRo-Select: Informativeness-Aware Client Selection and Gradient Compression for Communication-Efficient Federated Learning"
 authors:
   - family-names: Masud
-    given-names: Md. Akmol
-    affiliation: Jahangirnagar University
-    email: masud.stu2018@juniv.edu
+    given-names: M. A.
+    affiliation: Queen's University
+    email: m.masud@queensu.ca
   - family-names: Jahin
     given-names: Md Abrar
     affiliation: University of Southern California
     email: jahin@usc.edu
   - family-names: Hasan
-    given-names: Mahmud
+    given-names: M.
     affiliation: Virginia Commonwealth University
     email: hasanm10@vcu.edu
 year: 2026
 version: "1.0.0"
 license: MIT
 type: software
-repository-code: "https://github.com/<your-username>/hetero-select"
+repository-code: "https://github.com/masud1901/hetero-select"
 keywords:
   - federated-learning
   - client-selection
@@ -31,10 +31,10 @@ preferred-citation:
   title: "HeteRo-Select: Informativeness-Aware Client Selection and Gradient Compression for Communication-Efficient Federated Learning"
   authors:
     - family-names: Masud
-      given-names: Md. Akmol
+      given-names: M. A.
     - family-names: Jahin
       given-names: Md Abrar
     - family-names: Hasan
-      given-names: Mahmud
+      given-names: M.
   year: 2026
   journal: "Manuscript under review"
