@@ -1,21 +1,4 @@
 #!/usr/bin/env python3
-"""HeteRo-Select training entrypoint.
-
-Examples
---------
-* Single run with all defaults (CIFAR-10, psi=0.4, seed=42, 100 rounds):
-      python scripts/train.py --dataset cifar10 --psi 0.4 --seed 42
-
-* Reproduce the main 3-seed table on both datasets:
-      python scripts/train.py --grid main
-
-* Reproduce the ablation grid:
-      python scripts/train.py --grid ablation
-
-* 5-round smoke test:
-      python scripts/train.py --dataset cifar10 --psi 0.4 --seed 42 --rounds 5
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -25,8 +8,6 @@ import sys
 import zipfile
 from typing import Any, Dict, List
 
-# Allow running this file directly (``python scripts/train.py``) without
-# needing ``pip install -e .`` first.
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, os.pardir))
 if ROOT not in sys.path:

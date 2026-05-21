@@ -1,14 +1,3 @@
-"""Compression-related primitives.
-
-Contents
---------
-* ``cosine_theta`` / ``adaptive_beta`` : per-round budget and EF decay schedules
-* ``adaptive_ratios`` / ``uniform_ratios`` : per-client allocation policies
-* ``get_layer_ranges`` / ``markov_sample_layers`` : Markov-Newton layer picker
-* ``compute_hess_diag`` : one-shot Hutchinson Hessian-diagonal estimate
-* ``topk_compress`` : top-k sparsification with error feedback
-"""
-
 from __future__ import annotations
 
 import math
@@ -21,13 +10,6 @@ import torch.nn.functional as F
 
 
 def cosine_theta(rnd: int, fl: dict) -> float:
-    """Per-round average compression ratio.
-
-    Round 1 is a warm-up round at ``theta = 1.0`` so that the error
-    buffers are seeded with the full first delta.  Subsequent rounds
-    follow a cosine schedule whose mean over the run equals
-    ``fl['theta_total']``.
-    """
     if rnd <= fl["warmup_rounds"]:
         return 1.0
     t_eff = rnd - fl["warmup_rounds"]
@@ -39,13 +21,6 @@ def cosine_theta(rnd: int, fl: dict) -> float:
 
 
 def adaptive_beta(theta_t: float, beta_min: float = 0.85, beta_max: float = 0.97) -> float:
-    """Error-feedback decay tied to the per-round budget.
-
-    ``beta(theta) = beta_min + (beta_max - beta_min) * (1 - theta)``.
-
-    When the per-round budget is small, residuals must survive longer
-    before they are transmitted, so ``beta`` is larger.
-    """
     return beta_min + (beta_max - beta_min) * (1.0 - theta_t)
 
 
@@ -57,7 +32,6 @@ def adaptive_ratios(
     model_bits: int,
     T_budget: float,
 ) -> np.ndarray:
-    """Score-proportional per-client ratios, capped by the bandwidth ceiling."""
     s = scores[list(selected)].copy()
     s_mean = s.mean()
     if s_mean < 1e-8:
@@ -69,12 +43,10 @@ def adaptive_ratios(
 
 
 def uniform_ratios(m: int, theta_t: float) -> np.ndarray:
-    """Same ratio for every selected client (ablation baseline)."""
     return np.full(m, theta_t)
 
 
 def get_layer_ranges(model: nn.Module) -> List[Tuple[int, int]]:
-    """Flat ``[start, end)`` ranges for each parameter-bearing leaf module."""
     ranges: List[Tuple[int, int]] = []
     ptr = 0
     for module in model.modules():
@@ -96,7 +68,6 @@ def markov_sample_layers(
     lam: float,
     rng: np.random.RandomState,
 ) -> List[int]:
-    """Markov layer sampler with a uniform exploration floor ``lam``."""
     L = len(layer_ranges)
     if prev_mask is None:
         importance = np.ones(L) / L
@@ -118,7 +89,6 @@ def compute_hess_diag(
     g_clones: Sequence[torch.Tensor],
     device: torch.device,
 ) -> torch.Tensor:
-    """One Hutchinson Hessian-diagonal estimate using a single mini-batch."""
     x, y = next(iter(loader))
     x, y = x.to(device), y.to(device)
     local_model.train()
@@ -163,13 +133,6 @@ def topk_compress(
     sel_layers: Optional[Sequence[int]] = None,
     h_diag: Optional[torch.Tensor] = None,
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-    """Top-k sparsification with error feedback.
-
-    Coordinate score is ``v_i^2`` everywhere except inside the layers listed
-    in ``sel_layers``, where it is replaced by the Newton criterion
-    ``v_i^2 / |H_ii|``.  Returns the compressed delta, the new error buffer
-    and a boolean CPU mask of the selected coordinates.
-    """
     v = delta + ebuf
     k = max(1, int(ratio * v.numel()))
 

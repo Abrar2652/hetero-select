@@ -1,17 +1,3 @@
-"""Composite informativeness score and the softmax client selector.
-
-The score combines four normalized components
-
-    S_k(t) = V'_k + lambda_D D_k + lambda_F F'_k + lambda_St St'_k
-
-where
-
-    V'  : normalized local loss (distance from convergence)
-    D   : 1 - cosine(delta_k_prev, running consensus)        (privacy-safe)
-    F'  : 1 - count_k / mean_count                           (clipped to [-1, 1])
-    St' : log(1 + t - last_selected_k)                       (normalized to [0, 1])
-"""
-
 from __future__ import annotations
 
 import math
@@ -30,7 +16,6 @@ def compute_loss_scores(
     eval_batches: int,
     device: torch.device,
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """Return normalized loss scores ``V'`` and the raw per-client losses."""
     model.train(False)
     losses = np.zeros(len(loaders))
     for k, ld in enumerate(loaders):
@@ -55,12 +40,6 @@ def compute_diversity_scores(
     server_grad_avg: Optional[torch.Tensor],
     client_grads_prev: Dict[int, Optional[torch.Tensor]],
 ) -> np.ndarray:
-    """Cosine-diversity score using only already-transmitted compressed deltas.
-
-    Cold start and never-selected clients receive a neutral 0.5; otherwise
-
-        D_k = clip(1 - cos(delta_k_prev, server_grad_avg), 0, 1).
-    """
     if server_grad_avg is None or len(client_grads_prev) == 0:
         return np.full(num_clients, 0.5)
 
@@ -85,7 +64,6 @@ def compute_fairness_scores(
     sel_counts: Dict[int, int],
     rnd: int,
 ) -> np.ndarray:
-    """Additive fairness penalty F'_k = clip(1 - count_k / mean_count, -1, 1)."""
     counts = np.array([sel_counts.get(k, 0) for k in range(num_clients)], dtype=float)
     mean_c = counts.mean() if counts.mean() > 0 else 1.0
     return np.clip(1.0 - counts / mean_c, -1.0, 1.0)
@@ -97,7 +75,6 @@ def compute_staleness_scores(
     rnd: int,
     gamma: float,
 ) -> np.ndarray:
-    """Logarithmic staleness bonus, then min-max normalized to [0, 1]."""
     raw = np.zeros(num_clients)
     for k in range(num_clients):
         t_since = rnd - last_selected.get(k, 0)
@@ -120,7 +97,6 @@ def score_clients(
     rnd: int,
     fl: dict,
 ) -> Tuple[np.ndarray, np.ndarray, Dict[str, np.ndarray]]:
-    """Compute the four components and the normalized composite score."""
     K = len(loaders)
     V, losses = compute_loss_scores(model, loaders, eval_batches, device)
     D = compute_diversity_scores(K, server_grad_avg, client_grads_prev)
@@ -149,7 +125,6 @@ def softmax_select(
     tau: float,
     rng: np.random.RandomState,
 ) -> np.ndarray:
-    """Temperature-scaled softmax sampling without replacement."""
     s = scores / tau
     s -= s.max()
     p = np.exp(s)

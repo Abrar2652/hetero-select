@@ -1,11 +1,3 @@
-"""Model architectures used in the FedCG simulation protocol.
-
-The two networks below match the FedCG paper exactly:
-
-    * AlexNet for CIFAR-10  (~2.78 M parameters,  ~11.13 MB)
-    * ResNet-9 for CIFAR-100 (~6.62 M parameters, ~26.49 MB)
-"""
-
 from __future__ import annotations
 
 import torch
@@ -14,8 +6,6 @@ import torch.nn.functional as F
 
 
 class AlexNet(nn.Module):
-    """AlexNet for 32x32 CIFAR-10 images."""
-
     def __init__(self, num_classes: int = 10) -> None:
         super().__init__()
         self.features = nn.Sequential(
@@ -61,8 +51,6 @@ class _ResBlock(nn.Module):
 
 
 class ResNet9(nn.Module):
-    """ResNet-9 for CIFAR-100 (BatchNorm-augmented)."""
-
     def __init__(self, num_classes: int = 100) -> None:
         super().__init__()
         self.prep = _cbr(3, 64)
@@ -79,7 +67,6 @@ class ResNet9(nn.Module):
 
 
 def build_model(dataset: str, device: torch.device) -> nn.Module:
-    """Return the architecture matched to ``dataset`` placed on ``device``."""
     if dataset == "cifar10":
         model: nn.Module = AlexNet(num_classes=10)
     elif dataset == "cifar100":
@@ -94,5 +81,4 @@ def n_params(model: nn.Module) -> int:
 
 
 def size_mb(model: nn.Module) -> float:
-    """Approximate size in megabytes assuming float32 storage."""
     return n_params(model) * 4 / 1e6

@@ -1,5 +1,3 @@
-"""Server-side aggregation, momentum, evaluation and BatchNorm calibration."""
-
 from __future__ import annotations
 
 from typing import Iterable, Sequence
@@ -16,15 +14,6 @@ def score_weighted_aggregate(
     momentum_buf: torch.Tensor,
     beta_s: float,
 ) -> torch.Tensor:
-    """Score-weighted aggregation feeding a server-side momentum buffer.
-
-    ``delta_scored = sum_k (S_k / sum_j S_j) * delta_k``
-    ``M_t = beta_s * M_{t-1} + delta_scored``
-    ``w_{t+1} = w_t + M_t``
-
-    All work happens on the same device as ``deltas[0]``; ``global_model``
-    is updated in place and the new momentum buffer is returned.
-    """
     s = np.asarray(scores_sel, dtype=np.float32)
     s_sum = s.sum()
     if s_sum < 1e-8:
@@ -53,7 +42,6 @@ def calibrate_bn(
     n_batches: int,
     device: torch.device,
 ) -> None:
-    """Refresh BatchNorm running statistics on a few selected-client batches."""
     model.train(True)
     count = 0
     for ld in sel_loaders:
@@ -67,7 +55,6 @@ def calibrate_bn(
 
 @torch.no_grad()
 def evaluate(model: nn.Module, loader, device: torch.device) -> float:
-    """Top-1 test accuracy."""
     model.train(False)
     correct = total = 0
     for x, y in loader:

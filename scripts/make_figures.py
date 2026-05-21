@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-"""Regenerate every supplementary figure from JSON logs.
-
-This is a thin wrapper around the original ``make_extra_figures.py`` so
-that the figure-building logic still lives in one place but can be
-called from inside the public repo as
-
-    python scripts/make_figures.py --exp results/experiment \
-                                   --abl results/ablation  \
-                                   --out figs
-
-All figures are written as PNG into ``--out``.
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -24,7 +11,6 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
 
-# Plot style
 plt.rcParams.update({
     "font.size": 11,
     "axes.titlesize": 12,
@@ -144,7 +130,7 @@ def fig_stress_curve(abl: Path, exp: Path, out: Path) -> None:
 
 
 def _parse() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description=__doc__)
+    p = argparse.ArgumentParser(description="Regenerate figures from JSON logs.")
     p.add_argument("--exp", type=Path, default=Path("results/experiment"),
                    help="Directory with the main experiment JSON logs.")
     p.add_argument("--abl", type=Path, default=Path("results/ablation"),

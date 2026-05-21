@@ -1,5 +1,3 @@
-"""Two-round smoke test that exercises every module on CPU."""
-
 from __future__ import annotations
 
 import os

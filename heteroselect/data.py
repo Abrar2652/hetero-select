@@ -1,12 +1,3 @@
-"""Dataset loading and non-IID client partitioning.
-
-The partition rules below match the FedCG protocol exactly:
-
-    * CIFAR-10  : psi-LDA partition with controllable concentration ``psi``
-    * CIFAR-100 : skewed-label partition where each client is missing
-                  ``psi`` randomly chosen classes
-"""
-
 from __future__ import annotations
 
 from typing import List, Sequence, Tuple
@@ -24,7 +15,6 @@ _NORM = {
 
 
 def load_data(dataset: str, data_root: str = "./data") -> Tuple[Dataset, Dataset]:
-    """Download (if necessary) and return the ``(train, test)`` datasets."""
     if dataset not in _NORM:
         raise ValueError(f"Unknown dataset '{dataset}'. Use 'cifar10' or 'cifar100'.")
     mean, std = _NORM[dataset]
@@ -54,12 +44,6 @@ def partition_data(
     num_clients: int,
     seed: int,
 ) -> List[List[int]]:
-    """Split ``train_ds`` into ``num_clients`` non-IID shards.
-
-    For CIFAR-10 each client has a dominant class with mass ``psi`` and the
-    remainder filled uniformly from the other classes.  For CIFAR-100 each
-    client is missing ``psi`` random classes.
-    """
     labels = np.array([train_ds[i][1] for i in range(len(train_ds))])
     psi = cfg["psi"]
     rng = np.random.RandomState(seed)
@@ -121,7 +105,6 @@ def make_loaders(
     client_idx: Sequence[Sequence[int]],
     batch_size: int,
 ) -> List[DataLoader]:
-    """Wrap each client's index list in a shuffling DataLoader."""
     return [
         DataLoader(
             Subset(train_ds, list(idx)),

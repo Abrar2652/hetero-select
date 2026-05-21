@@ -1,11 +1,4 @@
 #!/usr/bin/env python3
-"""Pretty-print the final results table from a directory of JSON logs.
-
-Example
--------
-    python scripts/print_table.py results/
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -45,7 +38,7 @@ def _ms(vals: List[float]) -> str:
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description=__doc__)
+    p = argparse.ArgumentParser(description="Print results table from JSON logs.")
     p.add_argument("results_dir", help="Directory containing per-run JSON logs.")
     args = p.parse_args()
 

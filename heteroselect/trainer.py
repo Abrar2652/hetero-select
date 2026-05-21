@@ -1,5 +1,3 @@
-"""End-to-end HeteRo-Select training loop."""
-
 from __future__ import annotations
 
 import time
@@ -38,33 +36,6 @@ def run_experiment(
     log_every: int = 10,
     verbose: bool = True,
 ) -> Dict[str, Any]:
-    """Run a single HeteRo-Select experiment end-to-end.
-
-    Parameters
-    ----------
-    cfg : dict
-        Per-experiment overrides: at minimum ``dataset``, ``psi``, ``seed``.
-        Optional keys: ``variant`` (``'adaptive'``/``'uniform'``/``'stress'``),
-        ``mu`` (overrides the default proximal coefficient).
-    fl : dict
-        Global FL hyperparameters (see ``DEFAULT_FL_CONFIG``).
-    train_ds, test_loader : torch dataset / DataLoader
-        Training set used for partitioning and held-out test loader.
-    rng : np.random.RandomState
-        Numpy random state controlling selection sampling and bandwidth draws.
-    device : torch.device, optional
-        Defaults to CUDA when available.
-    log_every : int
-        Console log frequency (set to a large number to silence per-round output).
-    verbose : bool
-        If False, suppress the banner and round logs.
-
-    Returns
-    -------
-    dict
-        ``{"config", "fl_config", "summary", "rounds"}`` — the same structure
-        consumed by ``scripts/make_figures.py`` and ``scripts/print_table.py``.
-    """
     if device is None:
         device = get_device()
 
@@ -100,7 +71,6 @@ def run_experiment(
         fl["comp_min_s"], fl["comp_max_s"], fl["num_clients"]
     )
 
-    # Per-client state
     ebufs: Dict[int, torch.Tensor] = {
         k: torch.zeros(N, device=device) for k in range(fl["num_clients"])
     }
@@ -124,29 +94,22 @@ def run_experiment(
     t0 = time.time()
 
     for rnd in range(1, fl["num_rounds"] + 1):
-
-        # 1. Composite score V' + D + F' + St'
         scores, raw_losses, score_parts = score_clients(
             model, loaders, fl["eval_batches"], device,
             server_grad_avg, client_grads_prev,
             sel_counts, last_selected, rnd, fl,
         )
 
-        # 2. Sample M clients via temperature-scaled softmax
         tau = fl["tau_0"] * (1.0 - 0.5 * min(rnd / fl["num_rounds"], 1.0))
         sel = softmax_select(scores, fl["clients_per_round"], tau, rng)
         for k in sel:
             sel_counts[k] = sel_counts.get(k, 0) + 1
             last_selected[k] = rnd
 
-        # 3. Round compression budget and EF decay
         theta_t = cosine_theta(rnd, fl)
         beta_t = adaptive_beta(theta_t)
-
-        # 4. Decaying base learning rate
         lr_base = fl["local_lr"] * (1.0 - 0.5 * min(rnd / fl["num_rounds"], 1.0))
 
-        # 5. Per-round bandwidth draw (inverted under variant='stress')
         if variant == "stress":
             norm = raw_losses / (raw_losses.max() + 1e-8)
             inv = 1.0 - norm
@@ -160,7 +123,6 @@ def run_experiment(
             )
         bw_bps = bw_mbps * 1e6
 
-        # 6. Per-client compression ratios
         if variant == "uniform":
             theta_k = uniform_ratios(fl["clients_per_round"], theta_t)
         else:
@@ -168,7 +130,6 @@ def run_experiment(
                 scores, sel, theta_t, bw_bps, R_bits, T_budget,
             )
 
-        # 7. Local FedProx training and per-client compression
         compressed: List[torch.Tensor] = []
         scores_log: List[float] = []
         theta_k_log: List[float] = []
@@ -207,12 +168,10 @@ def run_experiment(
             scores_log.append(float(scores[k]))
             theta_k_log.append(float(theta_k[i]))
 
-        # 8. Score-weighted server-side momentum aggregation
         momentum_buf = score_weighted_aggregate(
             model, compressed, scores_log, momentum_buf, fl["beta_s"],
         )
 
-        # Update diversity state on CPU (saves GPU memory).
         client_grads_prev.update(round_grads)
         s_arr = np.array(scores_log, dtype=np.float32)
         s_arr = s_arr / (s_arr.sum() + 1e-8)
@@ -226,17 +185,14 @@ def run_experiment(
             else delta_scored_cpu
         )
 
-        # 9. BatchNorm calibration (ResNet9 only)
         if dataset == "cifar100":
             calibrate_bn(
                 model, [loaders[k] for k in sel[:3]],
                 fl["bn_calib_batches"], device,
             )
 
-        # 10. Held-out evaluation
         acc = evaluate(model, test_loader, device)
 
-        # 11. Simulated wall-clock and traffic
         r_time = sim_round_time(
             theta_k, bw_bps[sel], R_bits, fl["local_steps"], c_time[sel],
         )
@@ -244,7 +200,6 @@ def run_experiment(
         cum_t += r_time
         cum_mb += r_traffic
 
-        # 12. Per-round logging
         peak = max(peak, acc)
         if rounds_to_target is None and acc >= target:
             rounds_to_target = rnd
