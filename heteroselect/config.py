@@ -16,7 +16,7 @@ DEFAULT_FL_CONFIG: Dict[str, Any] = dict(
     bw_max_mbps       = 5.0,
     comp_min_s        = 0.10,
     comp_max_s        = 0.50,
-    target_acc        = {"cifar10": 0.70, "cifar100": 0.54},
+    target_acc        = {"mnist": 0.90, "cifar10": 0.70, "cifar100": 0.54, "tinyimagenet": 0.30},
     theta_total       = 0.20,
     theta_floor       = 0.08,
     warmup_rounds     = 1,
@@ -71,12 +71,18 @@ def load_config(path: str | None = None) -> Dict[str, Any]:
 
 def default_experiments() -> list[dict]:
     return [
-        dict(dataset="cifar10",  psi=0.4, seed=42),
-        dict(dataset="cifar10",  psi=0.4, seed=43),
-        dict(dataset="cifar10",  psi=0.4, seed=44),
-        dict(dataset="cifar100", psi=40,  seed=42),
-        dict(dataset="cifar100", psi=40,  seed=43),
-        dict(dataset="cifar100", psi=40,  seed=44),
+        dict(dataset="mnist",        psi=0.4, seed=42),
+        dict(dataset="mnist",        psi=0.4, seed=43),
+        dict(dataset="mnist",        psi=0.4, seed=44),
+        dict(dataset="cifar10",      psi=0.4, seed=42),
+        dict(dataset="cifar10",      psi=0.4, seed=43),
+        dict(dataset="cifar10",      psi=0.4, seed=44),
+        dict(dataset="cifar100",     psi=40,  seed=42),
+        dict(dataset="cifar100",     psi=40,  seed=43),
+        dict(dataset="cifar100",     psi=40,  seed=44),
+        dict(dataset="tinyimagenet", psi=80,  seed=42),
+        dict(dataset="tinyimagenet", psi=80,  seed=43),
+        dict(dataset="tinyimagenet", psi=80,  seed=44),
     ]
 
 

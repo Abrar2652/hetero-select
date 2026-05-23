@@ -185,7 +185,7 @@ def run_experiment(
             else delta_scored_cpu
         )
 
-        if dataset == "cifar100":
+        if dataset in ("cifar100", "tinyimagenet"):
             calibrate_bn(
                 model, [loaders[k] for k in sel[:3]],
                 fl["bn_calib_batches"], device,

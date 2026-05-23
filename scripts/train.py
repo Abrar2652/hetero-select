@@ -32,7 +32,9 @@ def _parse_args() -> argparse.Namespace:
                    help="Optional YAML/JSON file overlaying DEFAULT_FL_CONFIG.")
     p.add_argument("--grid", choices=["main", "ablation", "all"], default=None,
                    help="Predefined experiment grid. Overrides the single-run flags.")
-    p.add_argument("--dataset", choices=["cifar10", "cifar100"], default="cifar10")
+    p.add_argument("--dataset",
+                   choices=["mnist", "cifar10", "cifar100", "tinyimagenet"],
+                   default="cifar10")
     p.add_argument("--psi", type=float, default=0.4,
                    help="psi-LDA concentration for CIFAR-10, or # missing classes for CIFAR-100.")
     p.add_argument("--seed", type=int, default=42)

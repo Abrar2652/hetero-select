@@ -8,8 +8,10 @@ bw_max_mbps: 5.0
 comp_min_s: 0.10
 comp_max_s: 0.50
 target_acc:
+  mnist: 0.90
   cifar10: 0.70
   cifar100: 0.54
+  tinyimagenet: 0.30
 theta_total: 0.20
 theta_floor: 0.08
 warmup_rounds: 1
