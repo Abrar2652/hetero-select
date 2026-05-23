@@ -1,0 +1,40 @@
+[
+  {
+    "dataset": "cifar10",
+    "psi": 0.4,
+    "mu": 0.1,
+    "seed": 42,
+    "variant": "adaptive",
+    "peak_acc": 0.7303,
+    "final_acc": 0.7303,
+    "mean_last10_acc": 0.71532,
+    "stability_drop": 0.0,
+    "rounds_to_target": 83,
+    "time_to_target_s": 2912.68,
+    "traffic_to_target_mb": 2010.074,
+    "total_sim_time_s": 3430.74,
+    "total_traffic_mb": 2243.867,
+    "target_hit": true,
+    "model_params": 2781514,
+    "model_mb": 11.13
+  },
+  {
+    "dataset": "cifar100",
+    "psi": 40,
+    "mu": 0.1,
+    "seed": 42,
+    "variant": "adaptive",
+    "peak_acc": 0.4944,
+    "final_acc": 0.476,
+    "mean_last10_acc": 0.48477,
+    "stability_drop": 0.0184,
+    "rounds_to_target": null,
+    "time_to_target_s": null,
+    "traffic_to_target_mb": null,
+    "total_sim_time_s": 4455.69,
+    "total_traffic_mb": 5014.772,
+    "target_hit": false,
+    "model_params": 6621540,
+    "model_mb": 26.49
+  }
+]
