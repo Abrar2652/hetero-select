@@ -34,7 +34,7 @@ data/
 *.tar.gz
 
 # --- Run artefacts --------------------------------------------------------
-results/
+# results/
 results.zip
 figs/
 
@@ -42,7 +42,7 @@ figs/
 *.aux
 *.bbl
 *.blg
-*.log
+# *.log
 *.out
 *.toc
 *.fdb_latexmk
